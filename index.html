@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love & Romance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .romantic-font {
+            font-family: 'Dancing Script', cursive;
+        }
+        .heart-beat {
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .love-note {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+        }
+        .game-card {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .game-card.flipped {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-pink-900 bg-opacity-90 backdrop-blur-sm z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <h1 class="romantic-font text-2xl">Love Journey</h1>
+                <div class="space-x-4">
+                    <button onclick="showSection('home')" class="text-white hover:text-pink-300">Home</button>
+                    <button onclick="showSection('birthday')" class="text-white hover:text-pink-300">Birthday</button>
+                    <button onclick="showSection('games')" class="text-white hover:text-pink-300">Games</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="min-h-screen pt-20 px-4">
+        <div class="container mx-auto">
+            <div class="heart-beat text-center mb-8">
+                <i class="bi bi-heart-fill text-6xl text-pink-500"></i>
+            </div>
+            <div class="love-note rounded-lg p-8 max-w-2xl mx-auto mb-8">
+                <h2 class="romantic-font text-3xl mb-4">My Dearest Love</h2>
+                <p class="mb-4">Every moment with you feels like a beautiful dream come true. Your smile lights up my world and your love makes my heart complete.</p>
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                    <button onclick="generateLoveNote()" class="bg-white text-pink-600 py-2 px-4 rounded-full hover:bg-pink-100">Generate Love Note</button>
+                    <button onclick="showLoveCounter()" class="bg-white text-pink-600 py-2 px-4 rounded-full hover:bg-pink-100">Love Counter</button>
+                </div>
+            </div>
+            <div id="loveNoteDisplay" class="text-center romantic-font text-xl"></div>
+            <div id="loveCounter" class="text-center mt-4 hidden"></div>
+        </div>
+    </section>
+
+    <!-- Birthday Section -->
+    <section id="birthday" class="min-h-screen pt-20 px-4 hidden">
+        <div class="container mx-auto text-center">
+            <h2 class="romantic-font text-4xl mb-8">Happy Birthday My Love!</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gradient-to-r from-pink-800 to-purple-800 rounded-lg p-6">
+                    <h3 class="romantic-font text-2xl mb-4">Birthday Wishes</h3>
+                    <p class="mb-4">On this special day, I want to remind you how much you mean to me. You're my sunshine, my everything.</p>
+                    <button onclick="showBirthdayMessage()" class="bg-white text-pink-600 py-2 px-6 rounded-full hover:bg-pink-100">
+                        Open Birthday Card
+                    </button>
+                </div>
+                <div class="bg-gradient-to-r from-purple-800 to-pink-800 rounded-lg p-6">
+                    <h3 class="romantic-font text-2xl mb-4">Our Memories</h3>
+                    <div id="memoryContainer" class="h-48 overflow-hidden rounded-lg bg-black">
+                        <!-- Memory images would go here in real implementation -->
+                        <div class="w-full h-full bg-gradient-to-r from-pink-500 to-purple-500"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="min-h-screen pt-20 px-4 hidden">
+        <div class="container mx-auto">
+            <h2 class="romantic-font text-4xl text-center mb-8">Romantic Games</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-pink-900 rounded-lg p-6">
+                    <h3 class="romantic-font text-2xl mb-4">Truth or Dare</h3>
+                    <button onclick="playTruthOrDare()" class="w-full bg-white text-pink-600 py-2 rounded-full hover:bg-pink-100">
+                        Play Now
+                    </button>
+                    <div id="truthOrDareResult" class="mt-4 text-center"></div>
+                </div>
+                <div class="bg-purple-900 rounded-lg p-6">
+                    <h3 class="romantic-font text-2xl mb-4">Love Quiz</h3>
+                    <button onclick="startLoveQuiz()" class="w-full bg-white text-pink-600 py-2 rounded-full hover:bg-pink-100">
+                        Start Quiz
+                    </button>
+                    <div id="quizContainer" class="mt-4 hidden"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Love Notes Generator
+        const loveNotes = [
+            "You're the missing piece to my puzzle.",
+            "Every love story is beautiful, but ours is my favorite.",
+            "You make my heart skip a beat.",
+            "With you, every day feels like Valentine's Day."
+        ];
+
+        function generateLoveNote() {
+            const noteDisplay = document.getElementById('loveNoteDisplay');
+            const randomNote = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+            noteDisplay.textContent = randomNote;
+            noteDisplay.classList.add('animate-pulse');
+            setTimeout(() => noteDisplay.classList.remove('animate-pulse'), 1000);
+        }
+
+        // Love Counter
+        let loveCount = 0;
+        function showLoveCounter() {
+            const counter = document.getElementById('loveCounter');
+            counter.classList.remove('hidden');
+            counter.innerHTML = `
+                <p>Times I've thought about you today: ${++loveCount}</p>
+                <div class="text-pink-500 text-4xl mt-2">❤️</div>
+            `;
+        }
+
+        // Truth or Dare Game
+        const truths = [
+            "What's your favorite memory of us?",
+            "When did you first realize you loved me?",
+            "What's the most romantic thing I've done for you?"
+        ];
+
+        const dares = [
+            "Give me your sweetest compliment",
+            "Send me a loving voice message",
+            "Write a short poem about us"
+        ];
+
+        function playTruthOrDare() {
+            const result = document.getElementById('truthOrDareResult');
+            const isTrue = Math.random() < 0.5;
+            const array = isTrue ? truths : dares;
+            const item = array[Math.floor(Math.random() * array.length)];
+            result.innerHTML = `
+                <p class="font-bold mb-2">${isTrue ? 'Truth' : 'Dare'}:</p>
+                <p class="italic">${item}</p>
+            `;
+        }
+
+        // Love Quiz
+        const quizQuestions = [
+            {
+                question: "Where was our first date?",
+                options: ["Restaurant", "Park", "Movies", "Beach"],
+                correct: 0
+            },
+            {
+                question: "What's my favorite color?",
+                options: ["Blue", "Red", "Pink", "Purple"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startLoveQuiz() {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                showQuizResult();
+                return;
+            }
+
+            const question = quizQuestions[currentQuestion];
+            const quizContainer = document.getElementById('quizContainer');
+            
+            let html = `
+                <div class="bg-pink-800 rounded-lg p-4 mb-4">
+                    <p class="mb-4">${question.question}</p>
+                    <div class="grid grid-cols-2 gap-2">
+            `;
+
+            question.options.forEach((option, index) => {
+                html += `
+                    <button onclick="checkAnswer(${index})" class="bg-white text-pink-600 py-2 px-4 rounded hover:bg-pink-100">
+                        ${option}
+                    </button>
+                `;
+            });
+
+            html += `</div></div>`;
+            quizContainer.innerHTML = html;
+        }
+
+        function checkAnswer(answer) {
+            if (answer === quizQuestions[currentQuestion].correct) {
+                score++;
+            }
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showQuizResult() {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = `
+                <div class="text-center">
+                    <p class="text-2xl mb-4">Quiz Complete!</p>
+                    <p>You scored ${score} out of ${quizQuestions.length}</p>
+                    <button onclick="resetQuiz()" class="mt-4 bg-white text-pink-600 py-2 px-6 rounded-full hover:bg-pink-100">
+                        Play Again
+                    </button>
+                </div>
+            `;
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            startLoveQuiz();
+        }
+
+        // Birthday Message
+        function showBirthdayMessage() {
+            alert("Happy Birthday, my love! 🎂❤️\nYou make every day special, but today is extra special because it's all about you!");
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
